@@ -1,3 +1,3 @@
-# Codes for paper "Plan&Refine in RAG: Comprehensive Text Generation through Global Exploration and Local Exploitation"
+# Codes for paper "Plan-and-Refine: Diverse and Comprehensive Retrieval-Augmented Generation"
 
 codes will be added soon.
