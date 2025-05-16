@@ -7,7 +7,7 @@ This paper studies the limitations of (retrieval-augmented) large language model
 
 # Preparing data
 
-The first step is to load the antique dataset and prepare it to be useful for our experiments. You can do this by running the following script:
+The first step is to load the antique dataset and prepare it for use in our experiments. You can do this by running the following script:
 
 ```shell
 python utils/load_antique.py \
@@ -18,11 +18,11 @@ python utils/load_antique.py \
 
 # Inference with P&R
 
-To run P&R, you need to do the following steps:
+To run P&R, follow these steps:
 
 ## Generating plan for answering the query
 
-In this step, we use the planner model to generate a diverse set of plans. You can use the following script for this:
+In this step, we use the planner model to generate a diverse set of plans. To do this, run the following script:
 
 ```shell
 python plan_queries.py \
@@ -36,7 +36,7 @@ python plan_queries.py \
 
 ## Retrieving information for plans
 
-In this step, we use a retrieval model to retrieve the information required for excecuting each plan. To do this, we use the following script:
+In this step, we use a retrieval model to gather the information needed to execute each plan. To do this, run the following script:
 
 ```shell
 python retrieval/retriever.py \
@@ -50,7 +50,7 @@ python retrieval/retriever.py \
 
 ## Generate initial responses for each plan
 
-In this step, we generate an initial response for each plan, using the following script:
+In this step, we generate an initial response for each plan by running the following script:
 
 ```shell
 python generate_with_plan.py \
@@ -66,7 +66,7 @@ python generate_with_plan.py \
 
 ## Local Exploitation
 
-In this step, each generated response using the initial plans will go through a series of refinment steps to imporve them, using the following script:
+In this step, each response generated from the initial plans undergoes a series of refinement steps to improve its quality. This can be done using the following script:
 
 ```shell
 python local_search.py \
@@ -81,7 +81,7 @@ python local_search.py \
 
 ## Global exploration
 
-This is the final step, where a trained reward model is used to select the response with the highest reward, as the final response. This can be seen as a global search over all the previous generated responses:
+This is the final step, where a trained reward model selects the response with the highest score as the final output. This process can be seen as a global search across all previously generated responses:
 
 ```shell
 python global_search.py \
@@ -95,7 +95,7 @@ python global_search.py \
 
 # Evaluation using ICAT
 
-To evaluate the responses using ICAT score, we use the following script:
+To evaluate the responses using the [ICAT](https://arxiv.org/abs/2501.03545) score, run the following script:
 
 ```shell
 python icat_score.py \
@@ -110,7 +110,7 @@ python icat_score.py \
 
 ## Training planner model
 
-The first step in training the planning model is to generate a diverse set of plans, produce a response for each plan, evaluate the responses, and select those that exceed a certain threshold. The model is then trained on these high-quality, self-generated plans. To do this, we first generate a diverse set of plans:
+The first step in training the planning model involves generating a diverse set of plans, producing a response for each plan, evaluating the responses, and selecting those that exceed a predefined quality threshold. The model is then trained on these high-quality, self-generated plans. To begin, we generate a diverse set of plans:
 
 ```shell
 python plan_queries.py \
@@ -122,7 +122,7 @@ python plan_queries.py \
     --num_generated_outputs 32 \
 ```
 
-Then, the next step is to retrieve informtaion for each generated plan:
+Next, we retrieve information for each generated plan:
 
 ```shell
 python retrieval/retriever.py \
@@ -135,7 +135,7 @@ python retrieval/retriever.py \
 ```
 
 
-Then, the next step is to generate responses using these plans:
+The next step is to generate responses based on these plans:
 
 ```shell
 python generate_with_plan.py \
@@ -149,7 +149,7 @@ python generate_with_plan.py \
     --for_train_or_global_search \
 ```
 
-Then, the next step is to evaluate the generated responses:
+The next step is to evaluate the generated responses:
 
 ```shell
 python icat_score.py \
@@ -160,7 +160,7 @@ python icat_score.py \
     --train \
 ```
 
-Then, we sample the examples for training the planner:
+Next, we sample examples to train the planner:
 
 ```shell
 python sampling/creating_training_data_planning.py \
@@ -189,7 +189,7 @@ python train_gemma_planning.py \
 
 ## Training editor (refiner) model
 
-To train the editor model for local search, we should take the several steps. First, we need to generate a plan for each training question:
+To train the editor model for local search, we follow several steps. First, we generate a plan for each training question:
 
 ```shell
 python plan_queries.py \
@@ -201,7 +201,7 @@ python plan_queries.py \
     --num_generated_outputs 1 \
 ```
 
-Then, the next step is to retrieve informtaion for each generated plan:
+"Next, we retrieve information for each generated plan:
 
 ```shell
 python retrieval/retriever.py \
@@ -213,7 +213,7 @@ python retrieval/retriever.py \
     --corpus_path /*address to the corpus*/
 ```
 
-Then, for a generated plan, we should generate a set of responses that can be generated from each plan:
+Next, for each generated plan, we create a set of possible responses:
 
 ```shell
 python generate_with_plan.py \
@@ -226,7 +226,7 @@ python generate_with_plan.py \
     --num_contexts 40 \
 ```
 
-Then, the next step is to evaluate the generated responses:
+The next step is to evaluate the generated responses:
 
 ```shell
 python icat_score.py \
@@ -237,7 +237,7 @@ python icat_score.py \
     --train \
 ```
 
-Then, we sample the examples for training the editor:
+Next, we sample examples to train the editor:
 
 ```shell
 python sampling/creating_training_data_local_search.py \
@@ -268,7 +268,7 @@ python train_gemma_editor.py \
 
 ## Training the reward model for global search
 
-In order to train the reward model, we can use the already generated data for training planner. Then, the next step is to do sampling for training the reward model:
+To train the reward model, we use the data already generated for training the planner. Next, we perform sampling to prepare training examples for the reward model:
 
 ```shell
 python sampling/creating_training_data_global_search.py \
@@ -300,6 +300,8 @@ python train_reward_model_bert.py \
 ```
 
 # Reference
+
+[Plan-and-Refine: Diverse and Comprehensive Retrieval-Augmented Generation](https://arxiv.org/abs/2504.07794)
 
 ```
 @misc{salemi2025planandrefinediversecomprehensiveretrievalaugmented,
