@@ -50,45 +50,6 @@ def get_baseline_rag_formatter(num_contexts, train=False):
         return texts
     return formatter
 
-def get_baseline_rag_formatter_test_hamed(num_contexts, train=False):
-    def formatter(data):
-        assert "context" in data, 'context should be in the dataset'
-        texts = []
-        for i in range(len(data['query'])):
-            user_prompt = data['query'][i]
-            context = data['context'][i][:num_contexts]
-            combined_context = "\n\n".join([_get_documtent_text(doc) for doc in context])
-            text = f"""Your task is to read the given information carefully and generate only the word "done" in your output and nothing else.
-            query: 
-            {user_prompt}
-            context: 
-            {combined_context}
-            response:"""
-            if train:
-                text = text + f" {data['output'][i]}<eos>"
-            texts.append(text)
-        return texts
-    return formatter
-
-def get_baseline_rag_formatter_test_hamed_long(num_contexts, train=False):
-    def formatter(data):
-        assert "context" in data, 'context should be in the dataset'
-        texts = []
-        for i in range(len(data['query'])):
-            user_prompt = data['query'][i]
-            context = data['context'][i][:num_contexts]
-            combined_context = "\n\n".join([_get_documtent_text(doc) for doc in context])
-            text = f"""Your task is to read the given information and write them again word by word in your output and nothing else.
-            query: 
-            {user_prompt}
-            context: 
-            {combined_context}
-            response:"""
-            if train:
-                text = text + f" {data['output'][i]}<eos>"
-            texts.append(text)
-        return texts
-    return formatter
 
 def get_baseline_rag_cot_formatter(num_contexts):
     def formatter(data):
